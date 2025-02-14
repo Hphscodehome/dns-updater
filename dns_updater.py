@@ -1,10 +1,10 @@
 import requests
-import json
+import os
 
-def set_cloudflare_dns(API_TOKEN = "*",
-                       ZONE_ID = "*",
+def set_cloudflare_dns(API_TOKEN = os.getenv("API_TOKEN"),
+                       ZONE_ID = os.getenv("ZONE_ID"),
                        DNS_RECORD_NAME = "*",
-                       DOMAIN = "*",
+                       DOMAIN = os.getenv("DOMAIN"),
                        CURRENT_IP = "*"):
     BASE_URL = "https://api.cloudflare.com/client/v4"
     HEADERS = {
