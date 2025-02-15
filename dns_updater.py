@@ -71,6 +71,7 @@ def get_ipv4():
     logging.info('done')
     
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     current_time = datetime.now()
     logging.info(f"current_time:{current_time}")
     get_ipv4()
