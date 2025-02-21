@@ -94,13 +94,14 @@ def clean_workflows(REPO = "Hphscodehome/dns-updater",
         "Authorization": f"token {TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
-    logging.info(f"token:{TOKEN}")
+    
     # 计算三天前的日期
     cutoff_date = datetime.datetime.now() - datetime.timedelta(days=DAYS_TO_KEEP)
     # 获取所有 Workflow 运行记录
     response = requests.get(BASE_URL, headers=HEADERS)
     
     logging.info(f"response: {response}")
+    
     runs = response.json().get("workflow_runs", [])
     # 遍历并删除旧的运行记录
     for run in runs:

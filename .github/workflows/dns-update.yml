@@ -32,4 +32,5 @@ jobs:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           ZONE_ID: ${{ secrets.ZONE_ID }}
           DOMAIN: ${{ secrets.DOMAIN }}
+          TOKEN: ${{ secrets.TOKEN }}
         run: python dns_updater.py
