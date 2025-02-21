@@ -65,9 +65,25 @@ def get_ipv4():
     else:
         logging.info(f"请求失败，状态码: {result['code']}")
     logging.info(results)
-    for i in range(1,7):
+    
+    for i in range(1,4):
         #logging.info((i-1)%3,colos[(i-1)%3],(i-1)//3,results[colos[(i-1)%3]][(i-1)//3])
         set_cloudflare_dns(DNS_RECORD_NAME=f"node{i}",CURRENT_IP=results[colos[(i-1)%3]][(i-1)//3])
+        
+    # 定义目标 URL
+    url = "https://ipdb.api.030101.xyz/?type=bestproxy"
+    headers = {
+        "Content-Type": "application/json"
+    }
+    # 发送 GET 请求
+    response = requests.get(url, headers=headers)
+    result = response.text
+    results = result.strip().split('\n')
+    logging.info(results)
+    
+    for i in range(4,7):
+        set_cloudflare_dns(DNS_RECORD_NAME=f"node{i}",CURRENT_IP=results[(i-1)%3])
+    
     logging.info('done')
     
 if __name__ == '__main__':
