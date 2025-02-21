@@ -71,7 +71,7 @@ def get_ipv4():
         set_cloudflare_dns(DNS_RECORD_NAME=f"node{i}",CURRENT_IP=results[colos[(i-1)%3]][(i-1)//3])
         
     # 定义目标 URL
-    url = "https://ipdb.api.030101.xyz/?type=bestproxy"
+    url = "https://ipdb.api.030101.xyz/?type=bestcf"
     headers = {
         "Content-Type": "application/json"
     }
