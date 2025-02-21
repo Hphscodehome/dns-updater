@@ -1,7 +1,7 @@
 import requests
 import os
 import logging
-from datetime import datetime
+import datetime
 
 def set_cloudflare_dns(API_TOKEN = os.getenv("API_TOKEN"),
                        ZONE_ID = os.getenv("ZONE_ID"),
@@ -85,9 +85,37 @@ def get_ipv4():
         set_cloudflare_dns(DNS_RECORD_NAME=f"node{i}",CURRENT_IP=results[(i-1)%3])
     
     logging.info('done')
+
+def clean_workflows(REPO = "Hphscodehome/dns-updater",
+                    TOKEN = os.getenv("TOKEN"),
+                    DAYS_TO_KEEP = 3):
+    BASE_URL = f"https://api.github.com/repos/{REPO}/actions/runs"
+    HEADERS = {
+        "Authorization": f"token {TOKEN}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    # 计算三天前的日期
+    cutoff_date = datetime.datetime.now() - datetime.timedelta(days=DAYS_TO_KEEP)
+    # 获取所有 Workflow 运行记录
+    response = requests.get(BASE_URL, headers=HEADERS)
+    runs = response.json().get("workflow_runs", [])
+    # 遍历并删除旧的运行记录
+    for run in runs:
+        run_date = datetime.datetime.strptime(run["created_at"], "%Y-%m-%dT%H:%M:%SZ")
+        if run_date < cutoff_date:
+            run_id = run["id"]
+            delete_url = f"{BASE_URL}/{run_id}"
+            delete_response = requests.delete(delete_url, headers=HEADERS)
+            if delete_response.status_code == 204:
+                logging.info(f"成功删除 Workflow 运行记录 ID: {run_id}")
+            else:
+                logging.info(f"删除失败 ID: {run_id}, 状态码: {delete_response.status_code}")
+                
+    logging.info("清理完成！")
     
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    current_time = datetime.now()
+    current_time = datetime.datetime.now()
     logging.info(f"current_time:{current_time}")
     get_ipv4()
+    clean_workflows()
