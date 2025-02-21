@@ -88,7 +88,7 @@ def get_ipv4():
 
 def clean_workflows(REPO = "Hphscodehome/dns-updater",
                     TOKEN = os.getenv("TOKEN"),
-                    DAYS_TO_KEEP = 3):
+                    DAYS_TO_KEEP = 2):
     BASE_URL = f"https://api.github.com/repos/{REPO}/actions/runs"
     HEADERS = {
         "Authorization": f"token {TOKEN}",
